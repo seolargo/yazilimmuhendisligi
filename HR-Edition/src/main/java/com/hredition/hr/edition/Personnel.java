@@ -1,0 +1,129 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.hredition.hr.edition;
+
+import java.util.Date;
+
+/**
+ *
+ * @author omerhamidkamisli
+ */
+public class Personnel {
+    String name;
+    String surname;
+    String TC;
+    String phone;
+    String address;
+    int type;
+    float salary;
+    boolean isWorking;
+    int salarySystem;
+    Date startDate;
+    Date terminateDate;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getSurname() {
+        return surname;
+    }
+
+    public void setSurname(String surname) {
+        this.surname = surname;
+    }
+
+    public String getTC() {
+        return TC;
+    }
+
+    public void setTC(String TC) {
+        this.TC = TC;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
+
+    public float getSalary() {
+        return salary;
+    }
+
+    public void setSalary(float salary) {
+        this.salary = salary;
+    }
+
+    public boolean isIsWorking() {
+        return isWorking;
+    }
+
+    public void setIsWorking(boolean isWorking) {
+        this.isWorking = isWorking;
+    }
+
+    public int getSalarySystem() {
+        return salarySystem;
+    }
+
+    public void setSalarySystem(int salarySystem) {
+        this.salarySystem = salarySystem;
+    }
+
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    public Date getTerminateDate() {
+        return terminateDate;
+    }
+
+    public void setTerminateDate(Date terminateDate) {
+        this.terminateDate = terminateDate;
+    }
+
+    public Personnel(String name, String surname, String TC, String phone, String address, int type, float salary, int salarySystem) {
+        this.name = name;
+        this.surname = surname;
+        this.TC = TC;
+        this.phone = phone;
+        this.address = address;
+        this.type = type;
+        this.salary = salary;
+        this.salarySystem = salarySystem;
+        this.startDate = new Date();
+    }
+    
+    
+    
+}
