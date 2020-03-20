@@ -20,8 +20,8 @@ public class Personnel {
     float salary;
     boolean isWorking;
     int salarySystem;
-    Date startDate;
-    Date terminateDate;
+    String startDate;
+    String terminateDate;
 
     public String getName() {
         return name;
@@ -95,20 +95,20 @@ public class Personnel {
         this.salarySystem = salarySystem;
     }
 
-    public Date getStartDate() {
+    public String getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(Date startDate) {
+    public void setStartDate(String startDate) {
         this.startDate = startDate;
     }
 
-    public Date getTerminateDate() {
+    public String getTerminateDate() {
         //Bitis tarihi
         return terminateDate;
     }
 
-    public void setTerminateDate(Date terminateDate) {
+    public void setTerminateDate(String terminateDate) {
         this.terminateDate = terminateDate;
     }
 
@@ -121,6 +121,6 @@ public class Personnel {
         this.type = type;
         this.salary = salary;
         this.salarySystem = salarySystem;
-        this.startDate = new Date();
+        //this.startDate = new Date();
     }
 }

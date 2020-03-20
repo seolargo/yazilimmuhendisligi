@@ -13,6 +13,9 @@ import java.sql.ResultSet;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Locale;
+import java.text.SimpleDateFormat;
 
 import javax.swing.table.DefaultTableModel;
 
@@ -77,10 +80,10 @@ public class MainGui extends javax.swing.JFrame {
     {
     	try
     	{ 		
-        	ResultSet myRs = null;         
+        	//ResultSet myRs = null;         
             Connection myConn = (Connection) DriverManager.getConnection("jdbc:mysql://localhost:3306/employee","seolargo","123456");
             Statement myStat = (Statement) myConn.createStatement();
-     		myRs = myStat.executeQuery("select * from employee.projecttable");
+     		//myRs = myStat.executeQuery("select * from employee.projecttable");
         	myStat.executeUpdate(sql_sorgu);        
     	}
     	catch (SQLException e)
@@ -221,7 +224,8 @@ public class MainGui extends javax.swing.JFrame {
                 {null, null, null, null}
             },
             new String [] {
-            		"Name", "Surname", "TC", "Phone", "Address", "Salary"
+            		"Personel ID", "Name", "Surname", "TC", "Phone", "Address", "Salary", "Salary Type", 
+            		"İşe Giriş", "İşten Çıkış", "Çalışma Durumu", "Tazminat"
             }
         ));
         jScrollPane1.setViewportView(jTable1);
@@ -252,12 +256,12 @@ public class MainGui extends javax.swing.JFrame {
 
         jLabel7.setText("İşe Giriş Tarihi");
 
-        txt_BeginDate.setEditable(false);
+        txt_BeginDate.setEditable(true);
         txt_BeginDate.setName("txt_name"); // NOI18N
 
         jLabel8.setText("İşten Ayrılış Tarihi");
 
-        txt_finishDate.setEditable(false);
+        txt_finishDate.setEditable(true);
         txt_finishDate.setName("txt_name"); // NOI18N
 
         jLabel9.setText("Görev Tanımı");
@@ -288,21 +292,37 @@ public class MainGui extends javax.swing.JFrame {
 				String salary;
 				salary = txt_salary.getText();
 				
-				/*String beginDate;
+				String beginDate;
 				beginDate = txt_BeginDate.getText();
-				java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy");
-				java.time.LocalDate textFieldAsDate = java.time.LocalDate.parse(beginDate, formatter);
 				
 				String finishDate;
 				finishDate = txt_finishDate.getText();
-				java.time.format.DateTimeFormatter formatter2 = java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy");
-				java.time.LocalDate textFieldAsDate2 = java.time.LocalDate.parse(finishDate, formatter2);
-				 */
+					
+				//Author: ÖFY
+				//Adding ID value to the table. It goes all the way down :)
+				int size = 0;
+				Connection myConn;
+				try {
+					myConn = DriverManager.getConnection("jdbc:mysql://localhost:3306/employee", "seolargo", "123456");
+					java.sql.PreparedStatement ps = myConn.prepareStatement("SELECT * FROM employee.employeetable");
+					ResultSet rs = ps.executeQuery();			
+					while(rs.next())
+					{
+						rs.last();
+						size = rs.getRow();
+					}
+					System.out.println(size);
+				} 
+				catch (SQLException e1) {
+		    		e1.printStackTrace();
+		    	}
 				
 				//Herein sql query's are done.
 				String sorgu;
-				sorgu = "INSERT INTO employee.employeetable (name, surname, TC, phone, address, salary) VALUES (" 
-				+ "'" + ad + "'," + "'" + soyad + "'," + "'" + tc + "'," + "'" + phone + "'," + "'" +  adres + "'," + "'" + salary +  "')";
+				sorgu = "INSERT INTO employee.employeetable (personelId, name, surname, TC, phone, address, salary, salaryType, iseGiris, istenCikis, calismaDurumu, tazminat) VALUES (" 
+				+ "'" + size + "'," + "'" + ad + "'," + "'" + soyad + "'," + "'" + 
+						tc + "'," + "'" + phone + "'," + "'" +  adres + "'," + "'" + salary + "'," + "'" + 0 + "'," + "'" + beginDate + "'," 
+				+ "'" + finishDate + "'," + "'" + 0 + "'," + "'" + 0 + "')";
 				
 				//Printing the console, for debugging purpose.
 				System.out.println(sorgu);
@@ -361,8 +381,9 @@ public class MainGui extends javax.swing.JFrame {
 					tm.setRowCount(0);				
 					while(rs.next())
 					{
-						Object o[] = {rs.getString("name"), rs.getString("surname"), rs.getInt("TC"), 
-								rs.getInt("phone"), rs.getString("address"), rs.getInt("salary")};
+						Object o[] = {rs.getInt("personelId"), rs.getString("name"), rs.getString("surname"), rs.getInt("TC"), 
+								rs.getInt("phone"), rs.getString("address"), rs.getInt("salary"), rs.getInt("salaryType"), rs.getString("iseGiris"), 
+								rs.getString("istenCikis"), rs.getInt("calismaDurumu"), rs.getInt("tazminat")};
 						tm.addRow(o);
 					}
 					
@@ -511,10 +532,11 @@ public class MainGui extends javax.swing.JFrame {
                 {null, null, null, null}
             },
             new String [] {
-            		"Project Name", "Yönetici Min", "Analist Min", "Tasarimci Min", "Tester Min", "Yönetici Max", "Analist Max", "Tasarimci Max"
-                	, "Tester Max"
+            		"Project Id", "Project Name", "Yönetici Min", "Analist Min", "Tasarimci Min", "Tester Min", "Yönetici Max", "Analist Max", "Tasarimci Max"
+                	, "Tester Max", "Başlangıç Tarihi", "Bitiş Tarihi", "Bitti Mi"
             }
         ));
+        
         jScrollPane2.setViewportView(jTable2);
 
         jLabel11.setText("Proje Adı");
@@ -578,24 +600,41 @@ public class MainGui extends javax.swing.JFrame {
 				String testerMax;
 				testerMax = txt_maxTester.getText();
 				
-				
-				/*String beginDate;
-				beginDate = txt_BeginDate.getText();
-				java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy");
-				java.time.LocalDate textFieldAsDate = java.time.LocalDate.parse(beginDate, formatter);
+				String beginDate;
+				beginDate = txt_projeBegin.getText();
+				//System.out.println("begin date: " + beginDate);
 				
 				String finishDate;
-				finishDate = txt_finishDate.getText();
-				java.time.format.DateTimeFormatter formatter2 = java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy");
-				java.time.LocalDate textFieldAsDate2 = java.time.LocalDate.parse(finishDate, formatter2);
-				 */
+				finishDate = txt_projeFinish.getText();
+				//System.out.println("finish date: " + finishDate);
+				
+				//Author: ÖFY
+				//Adding ID value to the table. It goes all the way down :)
+				int size = 0;
+				Connection myConn;
+				try {
+					myConn = DriverManager.getConnection("jdbc:mysql://localhost:3306/employee", "seolargo", "123456");
+					java.sql.PreparedStatement ps = myConn.prepareStatement("SELECT * FROM employee.projecttable");
+					ResultSet rs = ps.executeQuery();			
+					while(rs.next())
+					{
+						rs.last();
+						size = rs.getRow();
+					}
+					System.out.println(size);
+				} 
+				catch (SQLException e1) {
+		    		e1.printStackTrace();
+		    	}
 				
 				//Herein sql query's are done.
 				String sorgu;
-				sorgu = "INSERT INTO employee.projecttable (projectName, yoneticiMin, analistMin, tasarimciMin, testerMin, yoneticiMax, analistMax, tasarimciMax, testerMax) "
-						+ "VALUES (" + "'" + projectName + "'," + "'" + yoneticiMin + "'," + "'" + analistMin + "'," + "'" 
+				sorgu = "INSERT INTO employee.projecttable (projectId, projectName, yoneticiMin, "
+						+ "analistMin, tasarimciMin, testerMin, yoneticiMax, analistMax, tasarimciMax, "
+						+ "testerMax, baslangicTarihi, bitisTarihi, bittiMi) "
+						+ "VALUES (" + "'" + size + "'," + "'" + projectName + "'," + "'" + yoneticiMin + "'," + "'" + analistMin + "'," + "'" 
 						+ tasarimciMin + "'," + "'" +  testerMin + "'," + "'" + yoneticiMax + "'," + "'" + analistMax 
-						+ "'," + "'" + tasarimciMax + "'," + "'" + testerMax + "')";
+						+ "'," + "'" + tasarimciMax + "'," + "'" + testerMax + "'," + "'" + beginDate + "'," + "'" + finishDate + "'," + "'" + 0 + "')";
 				
 				//Printing the console, for debugging purpose.
 				System.out.println(sorgu);
@@ -653,7 +692,43 @@ public class MainGui extends javax.swing.JFrame {
         btn_ProjeBitir.setText("Proje Bitir");
 
         btn_projePersonelGoruntule.setText("Projedeki Personelleri Görüntüle");
-
+        
+        /*
+         * TODO
+         * Hamid
+         * Not: "Kanka query aşağıda. Gerekli düzenlemeleri yapman gerekiyor."
+          	btn_projePersonelGoruntule.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                showProjectsActionPerformed(evt);
+                try {
+                	Connection myConn;
+                	myConn = DriverManager.getConnection("jdbc:mysql://localhost:3306/employee", "seolargo", "123456");
+					java.sql.PreparedStatement ps = myConn.prepareStatement("SELECT E.personelId, E.name, E.surname, E.TC, "
+							+ "E.phone, E.address, E.salary, "
+							+ "E.salaryType, E.iseGiris, E.istenCikis, E.calismaDurumu, "
+							+ "E.tazminat FROM employee.employeetable AS E, employee.projecttable AS P WHERE P.projectId = E.personelId;");
+					ResultSet rs = ps.executeQuery();
+					//TODO
+					 * Hangi table'a set edeceksin? jTable2 mi jTable1 mi?
+					DefaultTableModel tm = (DefaultTableModel)jTable2.getModel();
+					tm.setRowCount(0);				
+					while(rs.next())
+					{
+						TODO
+						"Kanka aşağıdaki yere dikkat et. Özellikle iseGiris ve istenCikis'lara. Aşağıdakilerin doğruluğunu kontrol etmedim. Query doğru."
+						Object o[] = {rs.getInt("personelId"), rs.getString("name"), rs.getString("surname"), 
+								rs.getInt("TC"), rs.getInt("phone"), rs.getString("address"),
+								rs.getInt("salary"), rs.getInt("salaryType"), rs.getString("iseGiris"), rs.getString("istenCikis"), rs.getInt("calismaDurumu"), rs.getInt("tazminat")};
+						tm.addRow(o);
+					}
+					
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}               
+            }
+        });
+        */
+        
         showProjects.setText("Projeleri Göster");
         //Author: ÖFY
         //This method shows the datas taken from employee.projecttable table.
@@ -669,9 +744,11 @@ public class MainGui extends javax.swing.JFrame {
 					tm.setRowCount(0);				
 					while(rs.next())
 					{
-						Object o[] = {rs.getString("projectName"), rs.getInt("yoneticiMin"), rs.getInt("analistMin"), 
+						Object o[] = {rs.getInt("projectId"), rs.getString("projectName"), rs.getInt("yoneticiMin"), rs.getInt("analistMin"), 
 								rs.getInt("tasarimciMin"), rs.getInt("testerMin"), rs.getInt("yoneticiMax"),
-								rs.getInt("analistMax"), rs.getInt("tasarimciMax"), rs.getInt("testerMax")};
+								rs.getInt("analistMax"), rs.getInt("tasarimciMax"), 
+								rs.getInt("testerMax"), rs.getString("baslangicTarihi"), rs.getString("bitisTarihi"),
+								rs.getInt("bittiMi")};
 						tm.addRow(o);
 					}
 					
